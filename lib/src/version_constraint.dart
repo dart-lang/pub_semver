@@ -79,6 +79,12 @@ abstract class VersionConstraint {
         case '<': return new VersionRange(max: version, includeMax: false);
         case '>=': return new VersionRange(min: version, includeMin: true);
         case '>': return new VersionRange(min: version, includeMin: false);
+        case '~': return new VersionRange(
+            min: version.prevTilde, includeMin: true,
+            max: version.nextTilde, includeMax: false);
+        case '^': return new VersionRange(
+            min: version.prevCaret, includeMin: true,
+            max: version.nextCaret, includeMax: false);
       }
       throw "Unreachable.";
     }
