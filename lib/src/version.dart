@@ -17,6 +17,12 @@ final _equality = const IterableEquality();
 
 /// A parsed semantic version number.
 class Version implements Comparable<Version>, VersionConstraint {
+  /// Zero version to be used in comparisons.
+  static final Version zero = new Version(0, 0, 0);
+  /// Infinite "unreachable" version to be used in comparisons.
+  /// TODO(ussuri): This is a little hacky.
+  static final Version infinity = new Version(1000000000000, 0, 0);
+
   /// No released version: i.e. "0.0.0".
   static Version get none => new Version(0, 0, 0);
 
@@ -156,6 +162,11 @@ class Version implements Comparable<Version>, VersionConstraint {
     }).toList();
   }
 
+  // TODO(ussuri): Right now [_isX] will always return false by construction.
+  // Add support for X's as version parts in [Version] and/or [VersionRange].
+  static const _xs = const [null, 'x', 'X', '*'];
+  bool _isX(var versionPart) => _xs.contains(versionPart);
+
   bool operator ==(other) {
     if (other is! Version) return false;
     return major == other.major && minor == other.minor &&
@@ -215,6 +226,102 @@ class Version implements Comparable<Version>, VersionConstraint {
     }
 
     return new Version(major, minor, patch + 1);
+  }
+
+  /// Gets the previous "tilde" (== "approximate) version for this one.
+  ///
+  /// Adapted from https://github.com/npm/node-semver/blob/master/semver.js:
+  ///
+  /// ~, ~> --> * (any, kinda silly)
+  /// ~2, ~2.x, ~2.x.x, ~>2, ~>2.x ~>2.x.x --> >=2.0.0 <3.0.0
+  /// ~2.0, ~2.0.x, ~>2.0, ~>2.0.x --> >=2.0.0 <2.1.0
+  /// ~1.2, ~1.2.x, ~>1.2, ~>1.2.x --> >=1.2.0 <1.3.0
+  /// ~1.2.3, ~>1.2.3 --> >=1.2.3 <1.3.0
+  /// ~1.2.0, ~>1.2.0 --> >=1.2.0 <1.3.0
+  /// NOTE: See TODO before [_isX].
+  Version get prevTilde {
+    if (_isX(major)) {
+      return zero;
+    } else if (_isX(minor)) {
+      return new Version(major, 0, 0);
+    } else if (_isX(patch)) {
+      // ~1.2 == >=1.2.0- <1.3.0-
+      return new Version(major, minor, 0);
+    } else if (preRelease.isNotEmpty) {
+      return new Version(major, minor, patch, pre: preRelease.join('.'));
+    } else {
+      // ~1.2.3 == >=1.2.3 <1.3.0
+      return new Version(major, minor, patch);
+    }
+  }
+
+  /// Gets the next "tilde" (== "approximate") version for this one;
+  /// the opposite of [prevTilde].
+  Version get nextTilde {
+    if (_isX(major)) {
+      return infinity;
+    } else if (_isX(minor)) {
+      return new Version(major + 1, 0, 0);
+    } else if (_isX(patch)) {
+      // ~1.2 == >=1.2.0- <1.3.0-
+      return new Version(major, minor + 1, 0);
+    } else if (preRelease.isNotEmpty) {
+      return new Version(major, minor + 1, 0);
+    } else {
+      // ~1.2.3 == >=1.2.3 <1.3.0
+      return new Version(major, minor + 1, 0);
+    }
+  }
+
+  /// Gets the previous "caret" (== "compatible") version for this one.
+  ///
+  /// Adapted from https://github.com/npm/node-semver/blob/master/semver.js:
+  ///
+  /// ^ --> * (any, kinda silly)
+  /// ^2, ^2.x, ^2.x.x --> >=2.0.0 <3.0.0
+  /// ^2.0, ^2.0.x --> >=2.0.0 <3.0.0
+  /// ^1.2, ^1.2.x --> >=1.2.0 <2.0.0
+  /// ^1.2.3 --> >=1.2.3 <2.0.0
+  /// ^1.2.0 --> >=1.2.0 <2.0.0
+  /// NOTE: See TODO before [_isX].
+  Version get prevCaret {
+    if (_isX(major)) {
+      return zero;
+    } else if (_isX(minor)) {
+      return new Version(major, 0, 0);
+    } else if (_isX(patch)) {
+      return new Version(major, minor, 0);
+    } else if (preRelease.isNotEmpty) {
+      return new Version(major, minor, patch, pre: preRelease.join('.'));
+    } else {
+      return new Version(major, minor, patch);
+    }
+  }
+
+  /// Gets the next "caret" (== "compatible") version for this one;
+  /// the opposite of [prevTilde].
+  Version get nextCaret {
+    if (_isX(major)) {
+      return infinity;
+    } else if (_isX(minor)) {
+      return new Version(major + 1, 0, 0);
+    } else if (_isX(patch)) {
+      if (major == 0) {
+        return new Version(major, minor + 1, 0);
+      } else {
+        return new Version(major + 1, minor, 0);
+      }
+    } else {
+      if (major == 0) {
+        if (minor == 0) {
+          return new Version(major, minor, patch + 1);
+        } else {
+          return new Version(major, minor + 1, 0);
+        }
+      } else {
+        return new Version(major + 1, 0, 0);
+      }
+    }
   }
 
   /// Tests if [other] matches this version exactly.

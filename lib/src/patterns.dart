@@ -7,6 +7,7 @@ library pub_semver.src.patterns;
 /// Regex that matches a version number at the beginning of a string.
 final START_VERSION = new RegExp(
     r'^'                                        // Start at beginning.
+    r'(?:[v=])?'                                // Optional 'v' or '=' in front.
     r'(\d+).(\d+).(\d+)'                        // Version number.
     r'(-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?'    // Pre-release.
     r'(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?'); // Build.
