@@ -62,21 +62,17 @@ main() {
     test('version must be greater than min', () {
       var range = new VersionRange(min: v123);
 
-      expect(range, allows(
-          new Version.parse('1.3.3'),
-          new Version.parse('2.3.3')));
-      expect(range, doesNotAllow(
-          new Version.parse('1.2.2'),
-          new Version.parse('1.2.3')));
+      expect(range,
+          allows(new Version.parse('1.3.3'), new Version.parse('2.3.3')));
+      expect(range,
+          doesNotAllow(new Version.parse('1.2.2'), new Version.parse('1.2.3')));
     });
 
     test('version must be min or greater if includeMin', () {
       var range = new VersionRange(min: v123, includeMin: true);
 
-      expect(range, allows(
-          new Version.parse('1.2.3'),
-          new Version.parse('1.3.3'),
-          new Version.parse('2.3.3')));
+      expect(range, allows(new Version.parse('1.2.3'),
+          new Version.parse('1.3.3'), new Version.parse('2.3.3')));
       expect(range, doesNotAllow(new Version.parse('1.2.2')));
     });
 
@@ -91,9 +87,8 @@ main() {
       var range = new VersionRange(max: v234);
 
       expect(range, allows(new Version.parse('2.3.3')));
-      expect(range, doesNotAllow(
-          new Version.parse('2.3.4'),
-          new Version.parse('2.4.3')));
+      expect(range,
+          doesNotAllow(new Version.parse('2.3.4'), new Version.parse('2.4.3')));
     });
 
     test('pre-release versions of non-pre-release max are excluded', () {
@@ -101,25 +96,21 @@ main() {
 
       expect(range, allows(new Version.parse('2.3.3')));
       expect(range, doesNotAllow(
-          new Version.parse('2.3.4-dev'),
-          new Version.parse('2.3.4')));
+          new Version.parse('2.3.4-dev'), new Version.parse('2.3.4')));
     });
 
     test('pre-release versions of pre-release max are included', () {
       var range = new VersionRange(max: new Version.parse('2.3.4-dev.2'));
 
-      expect(range, allows(
-          new Version.parse('2.3.4-dev.1')));
+      expect(range, allows(new Version.parse('2.3.4-dev.1')));
       expect(range, doesNotAllow(
-          new Version.parse('2.3.4-dev.2'),
-          new Version.parse('2.3.4-dev.3')));
+          new Version.parse('2.3.4-dev.2'), new Version.parse('2.3.4-dev.3')));
     });
 
     test('version must be max or less if includeMax', () {
       var range = new VersionRange(min: v123, max: v234, includeMax: true);
 
-      expect(range, allows(
-          new Version.parse('2.3.3'),
+      expect(range, allows(new Version.parse('2.3.3'),
           new Version.parse('2.3.4'),
           // Pre-releases of the max are allowed.
           new Version.parse('2.3.4-dev')));
@@ -136,18 +127,16 @@ main() {
     test('has no max if one was not set', () {
       var range = new VersionRange(min: v123);
 
-      expect(range, allows(
-          new Version.parse('1.3.3'),
-          new Version.parse('999.3.3')));
+      expect(range,
+          allows(new Version.parse('1.3.3'), new Version.parse('999.3.3')));
       expect(range, doesNotAllow(new Version.parse('1.2.3')));
     });
 
     test('allows any version if there is no min or max', () {
       var range = new VersionRange();
 
-      expect(range, allows(
-          new Version.parse('0.0.0'),
-          new Version.parse('999.99.9')));
+      expect(range,
+          allows(new Version.parse('0.0.0'), new Version.parse('999.99.9')));
     });
   });
 
@@ -188,8 +177,8 @@ main() {
     });
 
     test('returns the version if the range allows it', () {
-      expect(new VersionRange(min: v114, max: v124).intersect(v123),
-          equals(v123));
+      expect(
+          new VersionRange(min: v114, max: v124).intersect(v123), equals(v123));
       expect(new VersionRange(min: v123, max: v124).intersect(v114).isEmpty,
           isTrue);
     });

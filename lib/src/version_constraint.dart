@@ -81,10 +81,14 @@ abstract class VersionConstraint {
       }
 
       switch (op) {
-        case '<=': return new VersionRange(max: version, includeMax: true);
-        case '<': return new VersionRange(max: version, includeMax: false);
-        case '>=': return new VersionRange(min: version, includeMin: true);
-        case '>': return new VersionRange(min: version, includeMin: false);
+        case '<=':
+          return new VersionRange(max: version, includeMax: true);
+        case '<':
+          return new VersionRange(max: version, includeMax: false);
+        case '>=':
+          return new VersionRange(min: version, includeMin: true);
+        case '>':
+          return new VersionRange(min: version, includeMin: false);
       }
       throw "Unreachable.";
     }
@@ -194,8 +198,10 @@ class _EmptyVersion implements VersionConstraint {
 
 class _CompatibleWithVersionRange extends VersionRange {
   _CompatibleWithVersionRange(Version version) : super(
-      min: version, includeMin: true,
-      max: version.nextBreaking, includeMax: false);
+          min: version,
+          includeMin: true,
+          max: version.nextBreaking,
+          includeMax: false);
 
   String toString() => '^$min';
 }
