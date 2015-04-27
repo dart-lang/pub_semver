@@ -49,8 +49,8 @@ class VersionRange implements VersionConstraint {
   ///
   /// If [includeMin] is `true`, then the minimum end of the range is inclusive.
   /// Likewise, passing [includeMax] as `true` makes the upper end inclusive.
-  VersionRange({this.min, this.max,
-      this.includeMin: false, this.includeMax: false}) {
+  VersionRange(
+      {this.min, this.max, this.includeMin: false, this.includeMax: false}) {
     if (min != null && max != null && min > max) {
       throw new ArgumentError(
           'Minimum version ("$min") must be less than maximum ("$max").');
@@ -61,13 +61,15 @@ class VersionRange implements VersionConstraint {
     if (other is! VersionRange) return false;
 
     return min == other.min &&
-           max == other.max &&
-           includeMin == other.includeMin &&
-           includeMax == other.includeMax;
+        max == other.max &&
+        includeMin == other.includeMin &&
+        includeMax == other.includeMax;
   }
 
-  int get hashCode => min.hashCode ^ (max.hashCode * 3) ^
-      (includeMin.hashCode * 5) ^ (includeMax.hashCode * 7);
+  int get hashCode => min.hashCode ^
+      (max.hashCode * 3) ^
+      (includeMin.hashCode * 5) ^
+      (includeMax.hashCode * 7);
 
   bool get isEmpty => false;
 
@@ -89,8 +91,10 @@ class VersionRange implements VersionConstraint {
       //
       // See: https://www.npmjs.org/doc/misc/semver.html
       if (!includeMax &&
-          !max.isPreRelease && other.isPreRelease &&
-          other.major == max.major && other.minor == max.minor &&
+          !max.isPreRelease &&
+          other.isPreRelease &&
+          other.major == max.major &&
+          other.minor == max.minor &&
           other.patch == max.patch) {
         return false;
       }
@@ -148,15 +152,19 @@ class VersionRange implements VersionConstraint {
         return VersionConstraint.empty;
       }
 
-      if (intersectMin != null && intersectMax != null &&
+      if (intersectMin != null &&
+          intersectMax != null &&
           intersectMin > intersectMax) {
         // Non-overlapping ranges, so empty.
         return VersionConstraint.empty;
       }
 
       // If we got here, there is an actual range.
-      return new VersionRange(min: intersectMin, max: intersectMax,
-          includeMin: intersectIncludeMin, includeMax: intersectIncludeMax);
+      return new VersionRange(
+          min: intersectMin,
+          max: intersectMax,
+          includeMin: intersectIncludeMin,
+          includeMax: intersectIncludeMax);
     }
 
     throw new ArgumentError('Unknown VersionConstraint type $other.');

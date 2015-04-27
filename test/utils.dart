@@ -41,8 +41,8 @@ class _VersionConstraintMatcher implements Matcher {
     return description;
   }
 
-  Description describeMismatch(item, Description mismatchDescription,
-      Map matchState, bool verbose) {
+  Description describeMismatch(
+      item, Description mismatchDescription, Map matchState, bool verbose) {
     if (item is! VersionConstraint) {
       mismatchDescription.add('was not a VersionConstraint');
       return mismatchDescription;
@@ -72,8 +72,8 @@ class _VersionConstraintMatcher implements Matcher {
 
 /// Gets a [Matcher] that validates that a [VersionConstraint] allows all
 /// given versions.
-Matcher allows(Version v1, [Version v2, Version v3, Version v4,
-    Version v5, Version v6, Version v7, Version v8]) {
+Matcher allows(Version v1, [Version v2, Version v3, Version v4, Version v5,
+    Version v6, Version v7, Version v8]) {
   var versions = _makeVersionList(v1, v2, v3, v4, v5, v6, v7, v8);
   return new _VersionConstraintMatcher(versions, true);
 }
