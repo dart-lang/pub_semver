@@ -462,7 +462,8 @@ main() {
           isTrue);
     });
 
-    test("with a range with a pre-release min, returns an empty constraint", () {
+    test("with a range with a pre-release min, returns an empty constraint",
+        () {
       expect(
           new VersionRange(max: v200)
               .intersect(new VersionConstraint.parse(">=2.0.0-dev")),
@@ -547,9 +548,10 @@ main() {
               min: v003, max: v114, includeMin: true, includeMax: true)));
     });
 
-    test("with a range with a pre-release min, returns a constraint with a gap", () {
+    test("with a range with a pre-release min, returns a constraint with a gap",
+        () {
       var result = new VersionRange(max: v200)
-              .union(new VersionConstraint.parse(">=2.0.0-dev"));
+          .union(new VersionConstraint.parse(">=2.0.0-dev"));
       expect(result, allows(v140));
       expect(result, doesNotAllow(new Version.parse("2.0.0-alpha")));
       expect(result, allows(new Version.parse("2.0.0-dev")));

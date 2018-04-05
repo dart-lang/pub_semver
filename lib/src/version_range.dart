@@ -152,8 +152,8 @@ class VersionRange implements Comparable<VersionRange>, VersionConstraint {
       Version intersectMax;
       bool intersectIncludeMax;
       if (allowsHigher(this, other)) {
-          intersectMax = other.max;
-          intersectIncludeMax = other.includeMax;
+        intersectMax = other.max;
+        intersectIncludeMax = other.includeMax;
       } else {
         intersectMax = this.max;
         intersectIncludeMax = this.includeMax;
