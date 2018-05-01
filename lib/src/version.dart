@@ -183,6 +183,7 @@ class Version implements VersionConstraint, VersionRange {
 
   bool get isAny => false;
   bool get isEmpty => false;
+  bool get includeMaxPreRelease => false;
 
   /// Whether or not this is a pre-release version.
   bool get isPreRelease => preRelease.isNotEmpty;
@@ -239,6 +240,12 @@ class Version implements VersionConstraint, VersionRange {
     return _incrementMajor();
   }
 
+  /// Returns the first possible pre-release of this version.
+  Version get firstPreRelease => new Version(major, minor, patch, pre: "0");
+
+  /// Returns whether this is the first possible pre-release of its version.
+  bool get isFirstPreRelease => preRelease.length == 1 && preRelease.first == 0;
+
   Version _incrementMajor() => new Version(major + 1, 0, 0);
   Version _incrementMinor() => new Version(major, minor + 1, 0);
   Version _incrementPatch() => new Version(major, minor, patch + 1);
@@ -262,7 +269,8 @@ class Version implements VersionConstraint, VersionRange {
             min: other.min,
             max: other.max,
             includeMin: true,
-            includeMax: other.includeMax);
+            includeMax: other.includeMax,
+            includeMaxPreRelease: true);
       }
 
       if (other.max == this) {
@@ -270,7 +278,8 @@ class Version implements VersionConstraint, VersionRange {
             min: other.min,
             max: other.max,
             includeMin: other.includeMin,
-            includeMax: true);
+            includeMax: true,
+            includeMaxPreRelease: true);
       }
     }
 
