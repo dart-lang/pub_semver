@@ -16,9 +16,9 @@
   `(>=1.0.0 <2.0.0-dev).union(>=2.0.0-dev <2.0.0)` and
   `(>=1.0.0 <3.0.0).difference(^1.0.0)` wouldn't include `2.0.0-dev`.
 
-* Add a `includeMaxPreRelease` parameter to `new VersionRange()`, which disables
-  the replacement described above and allows users to create ranges that do
-  include the pre-release versions of an exclusive max version.
+* Add an `alwaysIncludeMaxPreRelease` parameter to `new VersionRange()`, which
+  disables the replacement described above and allows users to create ranges
+  that do include the pre-release versions of an exclusive max version.
 
 # 1.3.7
 

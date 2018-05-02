@@ -54,22 +54,21 @@ class VersionRange implements Comparable<VersionRange>, VersionConstraint {
   /// If [includeMin] is `true`, then the minimum end of the range is inclusive.
   /// Likewise, passing [includeMax] as `true` makes the upper end inclusive.
   ///
-  /// If [includeMaxPreRelease] is `true`, this will always include pre-release
-  /// versions of an exclusive [max]. Note that passing `false` indicates that
-  /// this range should use the default behavior for pre-release versions of
-  /// [max], not that it should *never* include them.
+  /// If [alwaysIncludeMaxPreRelease] is `true`, this will always include
+  /// pre-release versions of an exclusive [max]. Otherwise, it will use the
+  /// default behavior for pre-release versions of [max].
   factory VersionRange(
       {Version min,
       Version max,
       bool includeMin: false,
       bool includeMax: false,
-      bool includeMaxPreRelease: false}) {
+      bool alwaysIncludeMaxPreRelease: false}) {
     if (min != null && max != null && min > max) {
       throw new ArgumentError(
           'Minimum version ("$min") must be less than maximum ("$max").');
     }
 
-    if (!includeMaxPreRelease &&
+    if (!alwaysIncludeMaxPreRelease &&
         !includeMax &&
         max != null &&
         !max.isPreRelease &&
@@ -200,7 +199,7 @@ class VersionRange implements Comparable<VersionRange>, VersionConstraint {
           max: intersectMax,
           includeMin: intersectIncludeMin,
           includeMax: intersectIncludeMax,
-          includeMaxPreRelease: true);
+          alwaysIncludeMaxPreRelease: true);
     }
 
     throw new ArgumentError('Unknown VersionConstraint type $other.');
@@ -216,7 +215,7 @@ class VersionRange implements Comparable<VersionRange>, VersionConstraint {
             max: this.max,
             includeMin: true,
             includeMax: this.includeMax,
-            includeMaxPreRelease: true);
+            alwaysIncludeMaxPreRelease: true);
       }
 
       if (other == max) {
@@ -225,7 +224,7 @@ class VersionRange implements Comparable<VersionRange>, VersionConstraint {
             max: this.max,
             includeMin: this.includeMin,
             includeMax: true,
-            includeMaxPreRelease: true);
+            alwaysIncludeMaxPreRelease: true);
       }
 
       return new VersionConstraint.unionOf([this, other]);
@@ -265,7 +264,7 @@ class VersionRange implements Comparable<VersionRange>, VersionConstraint {
           max: unionMax,
           includeMin: unionIncludeMin,
           includeMax: unionIncludeMax,
-          includeMaxPreRelease: true);
+          alwaysIncludeMaxPreRelease: true);
     }
 
     return new VersionConstraint.unionOf([this, other]);
@@ -284,7 +283,7 @@ class VersionRange implements Comparable<VersionRange>, VersionConstraint {
             max: max,
             includeMin: false,
             includeMax: includeMax,
-            includeMaxPreRelease: true);
+            alwaysIncludeMaxPreRelease: true);
       }
 
       if (other == max) {
@@ -294,7 +293,7 @@ class VersionRange implements Comparable<VersionRange>, VersionConstraint {
             max: max,
             includeMin: includeMin,
             includeMax: false,
-            includeMaxPreRelease: true);
+            alwaysIncludeMaxPreRelease: true);
       }
 
       return new VersionUnion.fromRanges([
@@ -303,13 +302,13 @@ class VersionRange implements Comparable<VersionRange>, VersionConstraint {
             max: other,
             includeMin: includeMin,
             includeMax: false,
-            includeMaxPreRelease: true),
+            alwaysIncludeMaxPreRelease: true),
         new VersionRange(
             min: other,
             max: max,
             includeMin: false,
             includeMax: includeMax,
-            includeMaxPreRelease: true)
+            alwaysIncludeMaxPreRelease: true)
       ]);
     } else if (other is VersionRange) {
       if (!allowsAny(other)) return this;
@@ -327,7 +326,7 @@ class VersionRange implements Comparable<VersionRange>, VersionConstraint {
             max: other.min,
             includeMin: includeMin,
             includeMax: !other.includeMin,
-            includeMaxPreRelease: true);
+            alwaysIncludeMaxPreRelease: true);
       }
 
       VersionRange after;
@@ -343,7 +342,7 @@ class VersionRange implements Comparable<VersionRange>, VersionConstraint {
             max: max,
             includeMin: !other.includeMax,
             includeMax: includeMax,
-            includeMaxPreRelease: true);
+            alwaysIncludeMaxPreRelease: true);
       }
 
       if (before == null && after == null) return VersionConstraint.empty;

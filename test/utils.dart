@@ -24,7 +24,7 @@ final v300 = new Version.parse('3.0.0');
 
 /// A range that allows pre-release versions of its max version.
 final includeMaxPreReleaseRange =
-    new VersionRange(max: v200, includeMaxPreRelease: true);
+    new VersionRange(max: v200, alwaysIncludeMaxPreRelease: true);
 
 /// A [Matcher] that tests if a [VersionConstraint] allows or does not allow a
 /// given list of [Version]s.

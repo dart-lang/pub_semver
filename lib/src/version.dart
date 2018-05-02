@@ -183,7 +183,6 @@ class Version implements VersionConstraint, VersionRange {
 
   bool get isAny => false;
   bool get isEmpty => false;
-  bool get includeMaxPreRelease => false;
 
   /// Whether or not this is a pre-release version.
   bool get isPreRelease => preRelease.isNotEmpty;
@@ -270,7 +269,7 @@ class Version implements VersionConstraint, VersionRange {
             max: other.max,
             includeMin: true,
             includeMax: other.includeMax,
-            includeMaxPreRelease: true);
+            alwaysIncludeMaxPreRelease: true);
       }
 
       if (other.max == this) {
@@ -279,7 +278,7 @@ class Version implements VersionConstraint, VersionRange {
             max: other.max,
             includeMin: other.includeMin,
             includeMax: true,
-            includeMaxPreRelease: true);
+            alwaysIncludeMaxPreRelease: true);
       }
     }
 

@@ -528,7 +528,7 @@ main() {
             includeMaxPreReleaseRange
                 .intersect(new VersionConstraint.parse(">1.1.4")),
             equals(new VersionRange(
-                min: v114, max: v200, includeMaxPreRelease: true)));
+                min: v114, max: v200, alwaysIncludeMaxPreRelease: true)));
       });
 
       test(
@@ -559,7 +559,8 @@ main() {
 
     test("with a version on the edge of the range, expands the range", () {
       expect(
-          new VersionRange(min: v114, max: v124, includeMaxPreRelease: true)
+          new VersionRange(
+                  min: v114, max: v124, alwaysIncludeMaxPreRelease: true)
               .union(v124),
           equals(new VersionRange(min: v114, max: v124, includeMax: true)));
       expect(new VersionRange(min: v114, max: v124).union(v114),
@@ -608,9 +609,9 @@ main() {
           .union(new VersionRange(min: v114, max: v200));
       expect(result, equals(new VersionRange(min: v003, max: v200)));
 
-      result =
-          new VersionRange(min: v003, max: v114, includeMaxPreRelease: true)
-              .union(new VersionRange(min: v114, max: v200, includeMin: true));
+      result = new VersionRange(
+              min: v003, max: v114, alwaysIncludeMaxPreRelease: true)
+          .union(new VersionRange(min: v114, max: v200, includeMin: true));
       expect(result, equals(new VersionRange(min: v003, max: v200)));
 
       result = new VersionRange(min: v114, max: v200)
@@ -618,7 +619,8 @@ main() {
       expect(result, equals(new VersionRange(min: v003, max: v200)));
 
       result = new VersionRange(min: v114, max: v200, includeMin: true).union(
-          new VersionRange(min: v003, max: v114, includeMaxPreRelease: true));
+          new VersionRange(
+              min: v003, max: v114, alwaysIncludeMaxPreRelease: true));
       expect(result, equals(new VersionRange(min: v003, max: v200)));
     });
 
@@ -701,7 +703,8 @@ main() {
       expect(
           new VersionRange(min: v003, max: v114).difference(v072),
           equals(new VersionConstraint.unionOf([
-            new VersionRange(min: v003, max: v072, includeMaxPreRelease: true),
+            new VersionRange(
+                min: v003, max: v072, alwaysIncludeMaxPreRelease: true),
             new VersionRange(min: v072, max: v114)
           ])));
     });
@@ -711,7 +714,7 @@ main() {
           new VersionRange(min: v003, max: v114, includeMax: true)
               .difference(v114),
           equals(new VersionRange(
-              min: v003, max: v114, includeMaxPreRelease: true)));
+              min: v003, max: v114, alwaysIncludeMaxPreRelease: true)));
     });
 
     test("with the min version makes the min exclusive", () {
@@ -772,12 +775,12 @@ main() {
           new VersionRange(min: v080, max: v130).difference(
               new VersionRange(min: v114, max: v140, includeMin: true)),
           equals(new VersionRange(
-              min: v080, max: v114, includeMaxPreRelease: true)));
+              min: v080, max: v114, alwaysIncludeMaxPreRelease: true)));
       expect(
           new VersionRange(min: v080, max: v130, includeMax: true).difference(
               new VersionRange(min: v130, max: v140, includeMin: true)),
           equals(new VersionRange(
-              min: v080, max: v130, includeMaxPreRelease: true)));
+              min: v080, max: v130, alwaysIncludeMaxPreRelease: true)));
       expect(
           new VersionRange(min: v080, max: v130, includeMin: true)
               .difference(new VersionRange(min: v080, max: v130)),
@@ -835,9 +838,12 @@ main() {
           new VersionRange(min: v114, max: v140)
               .difference(new VersionConstraint.unionOf([v123, v124, v130])),
           equals(new VersionConstraint.unionOf([
-            new VersionRange(min: v114, max: v123, includeMaxPreRelease: true),
-            new VersionRange(min: v123, max: v124, includeMaxPreRelease: true),
-            new VersionRange(min: v124, max: v130, includeMaxPreRelease: true),
+            new VersionRange(
+                min: v114, max: v123, alwaysIncludeMaxPreRelease: true),
+            new VersionRange(
+                min: v123, max: v124, alwaysIncludeMaxPreRelease: true),
+            new VersionRange(
+                min: v124, max: v130, alwaysIncludeMaxPreRelease: true),
             new VersionRange(min: v130, max: v140)
           ])));
     });
@@ -875,7 +881,7 @@ main() {
                   min: new Version.parse("1.0.0-0"),
                   max: v200,
                   includeMin: true,
-                  includeMaxPreRelease: true)));
+                  alwaysIncludeMaxPreRelease: true)));
           expect(
               includeMaxPreReleaseRange
                   .difference(new VersionConstraint.parse("<2.0.0")),
@@ -883,7 +889,7 @@ main() {
                   min: v200.firstPreRelease,
                   max: v200,
                   includeMin: true,
-                  includeMaxPreRelease: true)));
+                  alwaysIncludeMaxPreRelease: true)));
           expect(
               includeMaxPreReleaseRange.difference(includeMaxPreReleaseRange),
               equals(VersionConstraint.empty));
@@ -925,9 +931,9 @@ main() {
                         min: v200,
                         max: v300,
                         includeMin: true,
-                        includeMaxPreRelease: true)),
+                        alwaysIncludeMaxPreRelease: true)),
                 equals(new VersionConstraint.unionOf([
-                  new VersionRange(max: v200, includeMaxPreRelease: true),
+                  new VersionRange(max: v200, alwaysIncludeMaxPreRelease: true),
                   new VersionConstraint.parse(">=3.0.0 <4.0.0")
                 ])));
           });

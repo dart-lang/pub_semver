@@ -85,7 +85,9 @@ abstract class VersionConstraint {
           return new VersionRange(max: version, includeMax: true);
         case '<':
           return new VersionRange(
-              max: version, includeMax: false, includeMaxPreRelease: true);
+              max: version,
+              includeMax: false,
+              alwaysIncludeMaxPreRelease: true);
         case '>=':
           return new VersionRange(min: version, includeMin: true);
         case '>':

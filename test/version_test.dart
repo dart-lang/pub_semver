@@ -192,7 +192,7 @@ main() {
     test("with a range with the version on the edge, expands the range", () {
       expect(
           v124.union(new VersionRange(
-              min: v114, max: v124, includeMaxPreRelease: true)),
+              min: v114, max: v124, alwaysIncludeMaxPreRelease: true)),
           equals(new VersionRange(min: v114, max: v124, includeMax: true)));
       expect(
           v124.firstPreRelease.union(new VersionRange(min: v114, max: v124)),

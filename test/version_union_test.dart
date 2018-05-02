@@ -101,7 +101,8 @@ main() {
           new VersionConstraint.unionOf([
             new VersionRange(min: v003, max: v072, includeMax: true),
             new VersionRange(min: v072, max: v080),
-            new VersionRange(min: v114, max: v124, includeMaxPreRelease: true),
+            new VersionRange(
+                min: v114, max: v124, alwaysIncludeMaxPreRelease: true),
             new VersionRange(min: v124, max: v130, includeMin: true),
             new VersionRange(
                 min: v130.firstPreRelease, max: v200, includeMin: true)
@@ -145,7 +146,8 @@ main() {
     test("merges adjacent version numbers into ranges", () {
       expect(
           new VersionConstraint.unionOf([
-            new VersionRange(min: v003, max: v072, includeMaxPreRelease: true),
+            new VersionRange(
+                min: v003, max: v072, alwaysIncludeMaxPreRelease: true),
             v072,
             v114,
             new VersionRange(min: v114, max: v124),
@@ -456,8 +458,10 @@ main() {
             new VersionRange(min: v130, max: v200)
           ]).difference(new VersionConstraint.unionOf([v072, v080])),
           equals(new VersionConstraint.unionOf([
-            new VersionRange(min: v010, max: v072, includeMaxPreRelease: true),
-            new VersionRange(min: v072, max: v080, includeMaxPreRelease: true),
+            new VersionRange(
+                min: v010, max: v072, alwaysIncludeMaxPreRelease: true),
+            new VersionRange(
+                min: v072, max: v080, alwaysIncludeMaxPreRelease: true),
             new VersionRange(min: v080, max: v114),
             new VersionRange(min: v130, max: v200)
           ])));
