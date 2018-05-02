@@ -35,9 +35,7 @@ main() {
       });
 
       test("max has a build identifier", () {
-        expect(
-            new VersionRange(max: new Version.parse("1.2.4+1"))
-                .max,
+        expect(new VersionRange(max: new Version.parse("1.2.4+1")).max,
             equals(new Version.parse("1.2.4+1")));
       });
     });
