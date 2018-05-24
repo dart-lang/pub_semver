@@ -1,7 +1,3 @@
-.packages
-packages
-pubspec.lock
 .dart_tool/
-
-# IntelliJ project.
-.idea
+.packages
+pubspec.lock
