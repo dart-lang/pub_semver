@@ -312,6 +312,9 @@ main() {
     expect(() => new Version.parse('1.3-pre'), throwsFormatException);
     expect(() => new Version.parse('1.3+build'), throwsFormatException);
     expect(() => new Version.parse('1.3+bu?!3ild'), throwsFormatException);
+    expect(() => new Version.parse('1.00.0'), throwsFormatException);
+    expect(() => new Version.parse('1.0.00'), throwsFormatException);
+    expect(() => new Version.parse('01.0.0'), throwsFormatException);
   });
 
   group('toString()', () {
