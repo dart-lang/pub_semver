@@ -4,7 +4,11 @@
 
 /// Regex that matches a version number at the beginning of a string.
 final START_VERSION = new RegExp(r'^' // Start at beginning.
-    r'(\d+).(\d+).(\d+)' // Version number.
+    r'(0|[1-9][0-9]*)' // Major
+    r'\.'
+    r'(0|[1-9][0-9]*)' // Minor
+    r'\.'
+    r'(0|[1-9][0-9]*)' // Patch
     r'(-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?' // Pre-release.
     r'(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?'); // Build.
 
