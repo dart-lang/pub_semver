@@ -312,7 +312,7 @@ main() {
     expect(() => new Version.parse('1.00.0'), throwsFormatException);
     expect(() => new Version.parse('1.0.00'), throwsFormatException);
     expect(() => new Version.parse('01.0.0'), throwsFormatException);
-    expect(() => new Version.parse('001.02.0003-01.dev+pre.002'), 
+    expect(() => new Version.parse('001.02.0003-01.dev+pre.002'),
         throwsFormatException);
   });
 
