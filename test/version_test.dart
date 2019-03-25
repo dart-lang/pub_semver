@@ -114,16 +114,6 @@ main() {
         }
       }
     });
-
-    test('equality', () {
-      expect(new Version.parse('01.2.3'), equals(new Version.parse('1.2.3')));
-      expect(new Version.parse('1.02.3'), equals(new Version.parse('1.2.3')));
-      expect(new Version.parse('1.2.03'), equals(new Version.parse('1.2.3')));
-      expect(
-          new Version.parse('1.2.3-01'), equals(new Version.parse('1.2.3-1')));
-      expect(
-          new Version.parse('1.2.3+01'), equals(new Version.parse('1.2.3+1')));
-    });
   });
 
   test('allows()', () {
@@ -331,11 +321,6 @@ main() {
           equals('1.2.3+build.1'));
       expect(new Version(1, 2, 3, pre: 'pre', build: 'bui').toString(),
           equals('1.2.3-pre+bui'));
-    });
-
-    test('preserves leading zeroes', () {
-      expect(new Version.parse('001.02.0003-01.dev+pre.002').toString(),
-          equals('001.02.0003-01.dev+pre.002'));
     });
   });
 }
