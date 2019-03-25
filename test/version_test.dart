@@ -114,6 +114,13 @@ main() {
         }
       }
     });
+    
+    test('equality', () {
+      expect(
+          new Version.parse('1.2.3-01'), equals(new Version.parse('1.2.3-1')));
+      expect(
+          new Version.parse('1.2.3+01'), equals(new Version.parse('1.2.3+1')));
+    });    
   });
 
   test('allows()', () {
@@ -305,6 +312,7 @@ main() {
     expect(() => new Version.parse('1.00.0'), throwsFormatException);
     expect(() => new Version.parse('1.0.00'), throwsFormatException);
     expect(() => new Version.parse('01.0.0'), throwsFormatException);
+    expect(() => new Version.parse('001.02.0003-01.dev+pre.002'), throwsFormatException);
   });
 
   group('toString()', () {
