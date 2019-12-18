@@ -96,7 +96,8 @@ class VersionUnion implements VersionConstraint {
     ourRanges.moveNext();
     theirRanges.moveNext();
     while (ourRanges.current != null && theirRanges.current != null) {
-      var intersection = ourRanges.current.intersect(theirRanges.current);
+      var intersection =
+          ourRanges.current.intersect(theirRanges.current) as VersionRange;
 
       if (!intersection.isEmpty) newRanges.add(intersection);
 
@@ -203,10 +204,9 @@ class VersionUnion implements VersionConstraint {
   VersionConstraint union(VersionConstraint other) =>
       VersionConstraint.unionOf([this, other]);
 
-  bool operator ==(other) {
-    if (other is! VersionUnion) return false;
-    return const ListEquality().equals(ranges, other.ranges);
-  }
+  bool operator ==(Object other) =>
+      other is VersionUnion &&
+      const ListEquality().equals(ranges, other.ranges);
 
   int get hashCode => const ListEquality().hash(ranges);
 

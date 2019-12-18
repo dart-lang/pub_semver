@@ -157,14 +157,13 @@ class Version implements VersionConstraint, VersionRange {
     }).toList();
   }
 
-  bool operator ==(other) {
-    if (other is! Version) return false;
-    return major == other.major &&
-        minor == other.minor &&
-        patch == other.patch &&
-        _equality.equals(preRelease, other.preRelease) &&
-        _equality.equals(build, other.build);
-  }
+  bool operator ==(Object other) =>
+      other is Version &&
+      major == other.major &&
+      minor == other.minor &&
+      patch == other.patch &&
+      _equality.equals(preRelease, other.preRelease) &&
+      _equality.equals(build, other.build);
 
   int get hashCode =>
       major ^
@@ -338,7 +337,7 @@ class Version implements VersionConstraint, VersionRange {
           return 1;
         } else {
           // Compare two strings.
-          return aPart.compareTo(bPart);
+          return (aPart as String).compareTo(bPart as String);
         }
       }
     }

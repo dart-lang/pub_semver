@@ -190,7 +190,7 @@ abstract class VersionConstraint {
       Iterable<VersionConstraint> constraints) {
     var constraint = VersionRange();
     for (var other in constraints) {
-      constraint = constraint.intersect(other);
+      constraint = constraint.intersect(other) as VersionRange;
     }
     return constraint;
   }
@@ -201,7 +201,7 @@ abstract class VersionConstraint {
   /// [constraints] is empty, this returns a constraint that allows no versions.
   factory VersionConstraint.unionOf(Iterable<VersionConstraint> constraints) {
     var flattened = constraints.expand((constraint) {
-      if (constraint.isEmpty) return [];
+      if (constraint.isEmpty) return <VersionConstraint>[];
       if (constraint is VersionUnion) return constraint.ranges;
       return [constraint];
     }).toList();
@@ -223,14 +223,15 @@ abstract class VersionConstraint {
     flattened.sort();
 
     var merged = <VersionRange>[];
-    for (var constraint in flattened) {
+    for (var constraint in flattened.cast<VersionRange>()) {
       // Merge this constraint with the previous one, but only if they touch.
       if (merged.isEmpty ||
           (!merged.last.allowsAny(constraint) &&
               !areAdjacent(merged.last, constraint))) {
         merged.add(constraint);
       } else {
-        merged[merged.length - 1] = merged.last.union(constraint);
+        merged[merged.length - 1] =
+            merged.last.union(constraint) as VersionRange;
       }
     }
 
