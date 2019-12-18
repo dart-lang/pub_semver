@@ -96,10 +96,9 @@ class VersionUnion implements VersionConstraint {
     ourRanges.moveNext();
     theirRanges.moveNext();
     while (ourRanges.current != null && theirRanges.current != null) {
-      var intersection =
-          ourRanges.current.intersect(theirRanges.current) as VersionRange;
+      var intersection = ourRanges.current.intersect(theirRanges.current);
 
-      if (!intersection.isEmpty) newRanges.add(intersection);
+      if (!intersection.isEmpty) newRanges.add(intersection as VersionRange);
 
       // Move the constraint with the lower max value forward. This ensures that
       // we keep both lists in sync as much as possible, and that large ranges
