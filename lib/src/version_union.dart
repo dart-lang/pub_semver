@@ -25,8 +25,10 @@ class VersionUnion implements VersionConstraint {
   ///   those constraints that they don't match.
   final List<VersionRange> ranges;
 
+  @override
   bool get isEmpty => false;
 
+  @override
   bool get isAny => false;
 
   /// Creates a union from a list of ranges with no pre-processing.
@@ -37,9 +39,11 @@ class VersionUnion implements VersionConstraint {
   /// VersionConstraint.unionOf] instead.
   VersionUnion.fromRanges(this.ranges);
 
+  @override
   bool allows(Version version) =>
       ranges.any((constraint) => constraint.allows(version));
 
+  @override
   bool allowsAll(VersionConstraint other) {
     var ourRanges = ranges.iterator;
     var theirRanges = _rangesFor(other).iterator;
@@ -61,6 +65,7 @@ class VersionUnion implements VersionConstraint {
     return theirRanges.current == null;
   }
 
+  @override
   bool allowsAny(VersionConstraint other) {
     var ourRanges = ranges.iterator;
     var theirRanges = _rangesFor(other).iterator;
@@ -86,6 +91,7 @@ class VersionUnion implements VersionConstraint {
     return false;
   }
 
+  @override
   VersionConstraint intersect(VersionConstraint other) {
     var ourRanges = ranges.iterator;
     var theirRanges = _rangesFor(other).iterator;
@@ -116,6 +122,7 @@ class VersionUnion implements VersionConstraint {
     return VersionUnion.fromRanges(newRanges);
   }
 
+  @override
   VersionConstraint difference(VersionConstraint other) {
     var ourRanges = ranges.iterator;
     var theirRanges = _rangesFor(other).iterator;
@@ -200,14 +207,18 @@ class VersionUnion implements VersionConstraint {
     throw ArgumentError('Unknown VersionConstraint type $constraint.');
   }
 
+  @override
   VersionConstraint union(VersionConstraint other) =>
       VersionConstraint.unionOf([this, other]);
 
+  @override
   bool operator ==(Object other) =>
       other is VersionUnion &&
       const ListEquality().equals(ranges, other.ranges);
 
+  @override
   int get hashCode => const ListEquality().hash(ranges);
 
-  String toString() => ranges.join(" or ");
+  @override
+  String toString() => ranges.join(' or ');
 }

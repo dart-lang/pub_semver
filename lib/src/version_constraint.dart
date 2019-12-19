@@ -54,7 +54,7 @@ abstract class VersionConstraint {
     skipWhitespace();
 
     // Handle the "any" constraint.
-    if (text == "any") return any;
+    if (text == 'any') return any;
 
     // Try to parse and consume a version number.
     Version matchVersion() {
@@ -265,21 +265,30 @@ abstract class VersionConstraint {
 class _EmptyVersion implements VersionConstraint {
   const _EmptyVersion();
 
+  @override
   bool get isEmpty => true;
 
+  @override
   bool get isAny => false;
 
+  @override
   bool allows(Version other) => false;
 
+  @override
   bool allowsAll(VersionConstraint other) => other.isEmpty;
 
+  @override
   bool allowsAny(VersionConstraint other) => false;
 
+  @override
   VersionConstraint intersect(VersionConstraint other) => this;
 
+  @override
   VersionConstraint union(VersionConstraint other) => other;
 
+  @override
   VersionConstraint difference(VersionConstraint other) => this;
 
+  @override
   String toString() => '<empty>';
 }
