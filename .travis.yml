@@ -2,26 +2,19 @@ language: dart
 
 dart:
   - dev
-  - 2.0.0
 
-dart_task:
-  - test
-
-matrix:
+jobs:
   include:
-    # Only validate formatting using the dev release
-    - dart: dev
-      dart_task: dartfmt
-    - dart: dev
-      dart_task:
-        dartanalyzer: --fatal-warnings --fatal-hints .
-    - dart: 2.0.0
-      dart_task:
-        dartanalyzer: --fatal-warnings .
+  - script: pub run --enable-experiment=non-nullable test
+  - dart_task: dartfmt
+  - dart_task:
+      dartanalyzer: --enable-experiment=non-nullable --fatal-infos --fatal-warnings .
+  - script: pub run --enable-experiment=non-nullable test -p chrome
 
 # Only building master means that we don't run two builds for each pull request.
+# Temporarily adding `null_safety`
 branches:
-  only: [master]
+  only: [master, null_safety]
 
 cache:
  directories:
