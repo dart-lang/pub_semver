@@ -379,5 +379,5 @@ void main() {
   });
 }
 
-Version _primary(Iterable<String> input) =>
-    Version.primary(input.map((e) => Version.parse(e)));
+Version _primary(List<String> input) =>
+    Version.primary(input.map((e) => Version.parse(e)).toList());
