@@ -1,3 +1,7 @@
+# 1.5.0-nullsafety
+
+- `Version.primary` now throws `StateError` if the `versions` argument is empty. 
+
 # 1.4.4
 
 - Fix a bug of `VersionRange.union` where ranges bounded at infinity would get

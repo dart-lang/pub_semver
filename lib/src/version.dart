@@ -132,20 +132,21 @@ class Version implements VersionConstraint, VersionRange {
     }
   }
 
-  /// Returns the primary version out of a list of candidates.
+  /// Returns the primary version out of [versions].
   ///
   /// This is the highest-numbered stable (non-prerelease) version. If there
   /// are no stable versions, it's just the highest-numbered version.
+  ///
+  /// If [versions] is empty, throws a [StateError].
   static Version primary(List<Version> versions) {
-    Version? primary;
-    for (var version in versions) {
-      if (primary == null ||
-          (!version.isPreRelease && primary.isPreRelease) ||
+    var primary = versions.first;
+    for (var version in versions.skip(1)) {
+      if ((!version.isPreRelease && primary.isPreRelease) ||
           (version.isPreRelease == primary.isPreRelease && version > primary)) {
         primary = version;
       }
     }
-    return primary!;
+    return primary;
   }
 
   /// Splits a string of dot-delimited identifiers into their component parts.
