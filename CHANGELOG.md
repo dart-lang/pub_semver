@@ -1,3 +1,7 @@
+# 2.1.0-dev
+- Added `Version.canonicalizedVersion` to help scrub leading zeros and highlight
+  that `Version.toString()` preserves leading zeros.
+
 # 2.0.0
 
 - Stable null safety release.
