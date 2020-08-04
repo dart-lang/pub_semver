@@ -1,4 +1,6 @@
 # 1.4.5-dev
+- Added `Version.canonicalizedVersion` to help scrub leading zeros and highlight
+  that `Version.toString()` preserves leading zeros.
 
 # 1.4.4
 
