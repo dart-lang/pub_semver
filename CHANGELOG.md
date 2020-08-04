@@ -1,4 +1,6 @@
 # 1.4.5-dev
+- Annotated `Version` with `@sealed` to further discourage users from
+  implementing the interface.
 
 # 1.4.4
 
