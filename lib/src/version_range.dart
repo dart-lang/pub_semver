@@ -430,41 +430,39 @@ class VersionRange implements Comparable<VersionRange>, VersionConstraint {
   String toString() {
     var buffer = StringBuffer();
 
-    final theMin = min;
-    if (theMin != null) {
+    final min = this.min;
+    if (min != null) {
       buffer..write(includeMin ? '>=' : '>')..write(min);
     }
 
-    final theMax = max;
+    final max = this.max;
 
-    if (theMax != null) {
-      if (theMin != null) buffer.write(' ');
+    if (max != null) {
+      if (min != null) buffer.write(' ');
       if (includeMax) {
         buffer..write('<=')..write(max);
       } else {
         buffer.write('<');
-        if (theMax.isFirstPreRelease) {
+        if (max.isFirstPreRelease) {
           // Since `"<$max"` would parse the same as `"<$max-0"`, we just emit
           // `<$max` to avoid confusing "-0" suffixes.
-          buffer.write('${theMax.major}.${theMax.minor}.${theMax.patch}');
+          buffer.write('${max.major}.${max.minor}.${max.patch}');
         } else {
           buffer.write(max);
 
           // If `">=$min <$max"` would parse as `">=$min <$max-0"`, add `-*` to
           // indicate that actually does allow pre-release versions.
-          var minIsPreReleaseOfMax = theMin != null &&
-              theMin.isPreRelease &&
-              equalsWithoutPreRelease(theMin, theMax);
-          if (!theMax.isPreRelease &&
-              theMax.build.isEmpty &&
-              !minIsPreReleaseOfMax) {
+          var minIsPreReleaseOfMax = min != null &&
+              min.isPreRelease &&
+              equalsWithoutPreRelease(min, max);
+          if (!max.isPreRelease && max.build.isEmpty && !minIsPreReleaseOfMax) {
             buffer.write('-∞');
           }
         }
       }
     }
 
-    if (theMin == null && theMax == null) buffer.write('any');
+    if (min == null && max == null) buffer.write('any');
     return buffer.toString();
   }
 }

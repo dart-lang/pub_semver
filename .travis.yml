@@ -1,7 +1,7 @@
 language: dart
 
 dart:
-  - dev
+- dev
 
 jobs:
   include:
@@ -18,4 +18,4 @@ branches:
 
 cache:
  directories:
-   - $HOME/.pub-cache
+ - $HOME/.pub-cache
