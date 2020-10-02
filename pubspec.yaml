@@ -1,16 +1,21 @@
 name: pub_semver
-version: 1.5.0-nullsafety
+version: 2.0.0-nullsafety-dev
 
 description: >-
  Versions and version constraints implementing pub's versioning policy. This
  is very similar to vanilla semver, with a few corner cases.
 homepage: https://github.com/dart-lang/pub_semver
 
+publish_to: none # needs to be in allow list to run without experiment flag
+
 environment:
- sdk: '>=2.10.0-0 <2.10.0'
+ sdk: '>=2.11.0-0 <2.11.0'
 
 dependencies:
   collection: ^1.15.0-nullsafety.2
 
 dev_dependencies:
   test: ^1.16.0-nullsafety.1
+
+dependency_overrides:
+  analyzer: any
