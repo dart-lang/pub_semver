@@ -1,4 +1,4 @@
-# 1.5.0-nullsafety-dev
+# 2.0.0-nullsafety.0
 
 - Migrate to null safety.
 - `Version.primary` now throws `StateError` if the `versions` argument is empty.
