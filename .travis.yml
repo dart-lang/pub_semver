@@ -9,7 +9,6 @@ dart_task:
 - dartanalyzer: --fatal-infos .
 
 # Only building master means that we don't run two builds for each pull request.
-# Temporarily adding `null_safety`
 branches:
   only: [master]
 
