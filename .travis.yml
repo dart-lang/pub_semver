@@ -11,7 +11,7 @@ dart_task:
 # Only building master means that we don't run two builds for each pull request.
 # Temporarily adding `null_safety`
 branches:
-  only: [master, null_safety]
+  only: [master]
 
 cache:
  directories:
