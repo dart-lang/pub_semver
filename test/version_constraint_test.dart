@@ -184,4 +184,15 @@ void main() {
       expect(constraint.toString(), equals('^0.7.2'));
     });
   });
+
+  group('updateWith()', () {
+    test('empty version', () {
+      var constraint = VersionConstraint.empty;
+
+      expect(
+        constraint.updateWith(Version(1, 2, 3)),
+        equals(VersionConstraint.compatibleWith(Version(1, 2, 3))),
+      );
+    });
+  });
 }

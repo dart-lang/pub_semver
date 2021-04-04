@@ -1,3 +1,8 @@
+# 2.1.0
+
+- Adds a `updateWith` to `VersionConstraints` to update the constraints to allow the given
+  `version`.  
+
 # 2.0.0
 
 - Stable null safety release.
