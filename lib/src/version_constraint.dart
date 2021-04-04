@@ -8,6 +8,32 @@ import 'version.dart';
 import 'version_range.dart';
 import 'version_union.dart';
 
+/// The strategy how the version constraints should be updated with.
+///
+/// What strategy to choose usually depends on if you build a package or an app.
+///
+/// For an app you should use `[bumpVersions].
+///
+/// For a package it might make sense to use [widenRanges] to support as many
+/// transitive versions as possible.
+///
+/// Any strategy will keep the same version constraint method.
+///
+/// If the version constraint was locked to a specific version then a constraint
+/// update will also lock to the new requested version.
+///
+/// If the version constraint is using the compatible with version constraint
+/// (the caret syntax), then the new version constraints will also use the caret
+/// syntax.
+enum UpdateStrategy {
+  /// Widen ranges will usually keep the minimum version while keeping the same
+  /// version constraint method.
+  widenRanges,
+
+  /// Bump versions will always try to update the minimum to the newest version.
+  bumpVersions,
+}
+
 /// A [VersionConstraint] is a predicate that can determine whether a given
 /// version is valid or not.
 ///
@@ -260,6 +286,49 @@ abstract class VersionConstraint {
   /// Returns a [VersionConstraint] that allows [Version]s allowed by this but
   /// not [other].
   VersionConstraint difference(VersionConstraint other);
+
+  /// Returns an updated [VersionConstraint] that will allow [version] by using
+  /// the update [strategy].
+  ///
+  /// This method is usually called with the newest version of a package.
+  ///
+  /// When calling on a [VersionRange] with a lower that minimum allowed
+  /// [version] it throws an [ArgumentError].
+  ///
+  /// This method is not supported for [VersionUnion] constraints as those can't
+  /// be used to create valid version constraints.
+  ///
+  /// Examples ([UpdateStrategy.bumpVersions]):
+  ///
+  /// * `1.2.0` -> `2.4.0` (with [version] `2.4.0`)
+  /// * `^1.2.0` -> `^1.4.0` (with [version] `1.4.0`)
+  /// * `>=1.2.0` -> `>=1.4.0` (with [version] `1.4.0`)
+  /// * `<2.0.0` -> `<2.0.0` (with [version] `1.4.0`)
+  /// * `<2.0.0` -> `<3.0.0` (with [version] `2.4.0`)
+  /// * `>=1.2.0 <2.0.0` -> `>=1.4.0 <2.0.0` (with [version] `1.4.0`)
+  /// * `>=1.2.0 <2.0.0` -> `>=2.4.0 <3.0.0` (with [version] `2.4.0`)
+  /// * `any` -> `any` (with [version] `2.4.0`)
+  ///
+  /// Examples ([UpdateStrategy.widenRanges]):
+  ///
+  /// * `1.2.0` -> `2.4.0` (with [version] `2.4.0`)
+  /// * `^1.2.0` -> `^1.2.0` (with [version] `1.4.0`)
+  /// * `^1.2.0` -> `^2.4.0` (with [version] `2.4.0`)
+  /// * `>=1.2.0` -> `>=1.2.0` (with [version] `1.4.0`)
+  /// * `<2.0.0` -> `<2.0.0` (with [version] `1.4.0`)
+  /// * `<2.0.0` -> `<3.0.0` (with [version] `2.4.0`)
+  /// * `>=1.2.0 <2.0.0` -> `>=1.2.0 <2.0.0` (with [version] `1.4.0`)
+  /// * `>=1.2.0 <2.0.0` -> `>=1.2.0 <3.0.0` (with [version] `2.4.0`)
+  /// * `any` -> `any` (with [version] `2.4.0`)
+  ///
+  /// See also:
+  ///
+  ///  * [UpdateStrategy], for more information about the various update
+  ///  strategies on how the behavior will change based on the [strategy].
+  VersionConstraint updateWith(
+    Version version, {
+    UpdateStrategy strategy = UpdateStrategy.bumpVersions,
+  });
 }
 
 class _EmptyVersion implements VersionConstraint {
@@ -288,6 +357,11 @@ class _EmptyVersion implements VersionConstraint {
 
   @override
   VersionConstraint difference(VersionConstraint other) => this;
+
+  @override
+  VersionConstraint updateWith(Version version, {UpdateStrategy? strategy}) {
+    return VersionConstraint.compatibleWith(version);
+  }
 
   @override
   String toString() => '<empty>';

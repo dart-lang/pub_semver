@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:pub_semver/src/version_range.dart';
 import 'package:test/test.dart';
 
 import 'package:pub_semver/pub_semver.dart';
@@ -988,6 +989,354 @@ void main() {
           VersionRange(min: v003, max: v300), VersionRange(min: v003));
       _expectComparesSmaller(VersionRange(min: v003, max: v300),
           VersionRange(min: v003, includeMax: true));
+    });
+  });
+
+  group('updateWith()', () {
+    test('any version stays any', () {
+      var constraint = VersionConstraint.any;
+
+      expect(
+        constraint.updateWith(Version(1, 2, 3)),
+        equals(VersionConstraint.any),
+      );
+    });
+
+    test('lower version than allowed by constraint', () {
+      var constraint = VersionRange(
+        min: Version(1, 2, 3),
+        includeMin: true,
+      );
+
+      expect(
+        () => constraint.updateWith(Version(1, 2, 2)),
+        throwsArgumentError,
+      );
+    });
+
+    group('min version', () {
+      test('strategy bump versions - include min', () {
+        var constraint = VersionRange(
+          min: Version(1, 2, 3),
+          includeMin: true,
+        );
+
+        expect(
+          constraint.updateWith(
+            Version(1, 4, 0),
+            strategy: UpdateStrategy.bumpVersions,
+          ),
+          equals(VersionRange(
+            min: Version(1, 4, 0),
+            includeMin: true,
+          )),
+        );
+      });
+
+      test('strategy bump versions - exclude min', () {
+        var constraint = VersionRange(
+          min: Version(1, 2, 3),
+          includeMin: false,
+        );
+
+        expect(
+          constraint.updateWith(
+            Version(1, 4, 0),
+            strategy: UpdateStrategy.bumpVersions,
+          ),
+          equals(VersionRange(
+            min: Version(1, 4, 0),
+            includeMin: true,
+          )),
+        );
+      });
+
+      test('strategy widen ranges - include min', () {
+        var constraint = VersionRange(
+          min: Version(1, 2, 3),
+          includeMin: true,
+        );
+
+        expect(
+          constraint.updateWith(
+            Version(1, 4, 0),
+            strategy: UpdateStrategy.widenRanges,
+          ),
+          equals(VersionRange(
+            min: Version(1, 2, 3),
+            includeMin: true,
+          )),
+        );
+      });
+
+      test('strategy widen ranges - exclude min', () {
+        var constraint = VersionRange(
+          min: Version(1, 2, 3),
+          includeMin: false,
+        );
+
+        expect(
+          constraint.updateWith(
+            Version(1, 4, 0),
+            strategy: UpdateStrategy.widenRanges,
+          ),
+          equals(VersionRange(
+            min: Version(1, 2, 3),
+            includeMin: false,
+          )),
+        );
+      });
+    });
+
+    group('max version', () {
+      test('strategy bump versions - include max', () {
+        var constraint = VersionRange(
+          max: Version(2, 0, 0),
+          includeMax: true,
+        );
+
+        expect(
+          constraint.updateWith(
+            Version(2, 4, 0),
+            strategy: UpdateStrategy.bumpVersions,
+          ),
+          equals(VersionRange(
+            max: Version(3, 0, 0),
+            includeMax: false,
+          )),
+        );
+      });
+
+      test('strategy bump versions - exclude max', () {
+        var constraint = VersionRange(
+          max: Version(2, 0, 0),
+          includeMax: false,
+        );
+
+        expect(
+          constraint.updateWith(
+            Version(2, 4, 0),
+            strategy: UpdateStrategy.bumpVersions,
+          ),
+          equals(VersionRange(
+            max: Version(3, 0, 0),
+            includeMax: false,
+          )),
+        );
+      });
+
+      test('strategy bump versions - already allowed', () {
+        var constraint = VersionRange(
+          max: Version(3, 0, 0),
+          includeMax: false,
+        );
+
+        expect(
+          constraint.updateWith(
+            Version(1, 4, 0),
+            strategy: UpdateStrategy.bumpVersions,
+          ),
+          equals(VersionRange(
+            max: Version(3, 0, 0),
+            includeMax: false,
+          )),
+        );
+      });
+
+      test('strategy widen ranges - include max', () {
+        var constraint = VersionRange(
+          max: Version(2, 0, 0),
+          includeMax: true,
+        );
+
+        expect(
+          constraint.updateWith(
+            Version(2, 4, 0),
+            strategy: UpdateStrategy.widenRanges,
+          ),
+          equals(VersionRange(max: Version(3, 0, 0), includeMax: false)),
+        );
+      });
+
+      test('strategy widen ranges - exclude max', () {
+        var constraint = VersionRange(
+          max: Version(2, 0, 0),
+          includeMax: false,
+        );
+
+        expect(
+          constraint.updateWith(
+            Version(2, 4, 0),
+            strategy: UpdateStrategy.widenRanges,
+          ),
+          equals(VersionRange(
+            max: Version(3, 0, 0),
+            includeMax: false,
+          )),
+        );
+      });
+
+      test('strategy widen ranges - already allowed', () {
+        var constraint = VersionRange(
+          max: Version(3, 0, 0),
+          includeMax: false,
+        );
+
+        expect(
+          constraint.updateWith(
+            Version(1, 4, 0),
+            strategy: UpdateStrategy.widenRanges,
+          ),
+          equals(VersionRange(
+            max: Version(3, 0, 0),
+            includeMax: false,
+          )),
+        );
+      });
+    });
+
+    group('min - max version', () {
+      test('strategy bump versions', () {
+        var constraint = VersionRange(
+          min: Version(1, 4, 0),
+          includeMin: true,
+          max: Version(2, 0, 0),
+          includeMax: false,
+        );
+
+        expect(
+          constraint.updateWith(
+            Version(2, 4, 0),
+            strategy: UpdateStrategy.bumpVersions,
+          ),
+          equals(VersionRange(
+            min: Version(2, 4, 0),
+            includeMin: true,
+            max: Version(3, 0, 0),
+            includeMax: false,
+          )),
+        );
+      });
+
+      test('strategy bump versions - already allowed', () {
+        var constraint = VersionRange(
+          min: Version(1, 2, 0),
+          includeMin: true,
+          max: Version(3, 0, 0),
+          includeMax: false,
+        );
+
+        expect(
+          constraint.updateWith(
+            Version(1, 4, 0),
+            strategy: UpdateStrategy.bumpVersions,
+          ),
+          equals(VersionRange(
+            min: Version(1, 4, 0),
+            includeMin: true,
+            max: Version(3, 0, 0),
+            includeMax: false,
+          )),
+        );
+      });
+
+      test('strategy widen ranges', () {
+        var constraint = VersionRange(
+          min: Version(1, 4, 0),
+          includeMin: true,
+          max: Version(2, 0, 0),
+          includeMax: true,
+        );
+
+        expect(
+          constraint.updateWith(
+            Version(2, 4, 0),
+            strategy: UpdateStrategy.widenRanges,
+          ),
+          equals(VersionRange(
+            min: Version(1, 4, 0),
+            includeMin: true,
+            max: Version(3, 0, 0),
+            includeMax: false,
+          )),
+        );
+      });
+
+      test('strategy widen ranges - already allowed', () {
+        var constraint = VersionRange(
+          min: Version(1, 2, 0),
+          includeMin: true,
+          max: Version(3, 0, 0),
+          includeMax: false,
+        );
+
+        expect(
+          constraint.updateWith(
+            Version(1, 4, 0),
+            strategy: UpdateStrategy.widenRanges,
+          ),
+          equals(VersionRange(
+            min: Version(1, 2, 0),
+            includeMin: true,
+            max: Version(3, 0, 0),
+            includeMax: false,
+          )),
+        );
+      });
+    });
+
+    group('compatible with version range', () {
+      test('lower version than allowed by constraint', () {
+        var constraint = CompatibleWithVersionRange(Version(1, 2, 3));
+
+        expect(
+          () => constraint.updateWith(Version(1, 2, 2)),
+          throwsArgumentError,
+        );
+      });
+
+      test('strategy bump versions', () {
+        var constraint = CompatibleWithVersionRange(Version(1, 2, 3));
+
+        expect(
+          constraint.updateWith(
+            Version(1, 4, 0),
+            strategy: UpdateStrategy.bumpVersions,
+          ),
+          equals(CompatibleWithVersionRange(Version(1, 4, 0))),
+        );
+      });
+
+      test('strategy widen ranges - same major version', () {
+        var constraint = CompatibleWithVersionRange(Version(1, 2, 3));
+
+        expect(
+          constraint.updateWith(
+            Version(1, 4, 0),
+            strategy: UpdateStrategy.widenRanges,
+          ),
+          equals(CompatibleWithVersionRange(Version(1, 2, 3))),
+        );
+      });
+
+      test('strategy widen ranges - higher major version', () {
+        var constraint = CompatibleWithVersionRange(Version(1, 2, 3));
+
+        expect(
+          constraint.updateWith(
+            Version(2, 0, 1),
+            strategy: UpdateStrategy.widenRanges,
+          ),
+          equals(
+            VersionRange(
+              min: Version(1, 2, 3),
+              max: Version(3, 0, 0),
+              includeMin: true,
+              includeMax: false,
+            ),
+          ),
+        );
+      });
     });
   });
 }

@@ -396,6 +396,60 @@ class VersionRange implements Comparable<VersionRange>, VersionConstraint {
   }
 
   @override
+  VersionConstraint updateWith(
+    Version version, {
+    UpdateStrategy strategy = UpdateStrategy.bumpVersions,
+  }) {
+    final min = this.min;
+    final max = this.max;
+    if (min != null && version < min) {
+      throw ArgumentError(
+        'Version $version can\'t be lower than version constraint ${toString()}',
+      );
+    }
+    Version? newMin, newMax;
+    var includeMin = false;
+    var includeMax = false;
+
+    switch (strategy) {
+      case UpdateStrategy.bumpVersions:
+        if (min != null) {
+          // Only set min if it was set before.
+          newMin = version;
+          includeMin = true;
+        }
+        if (max != null) {
+          // Only set max if it was set before.
+          if (max >= version.nextBreaking.firstPreRelease) {
+            newMax = max;
+            includeMax = this.includeMax;
+          } else {
+            newMax = version.nextBreaking.firstPreRelease;
+            includeMax = false;
+          }
+        }
+        break;
+      case UpdateStrategy.widenRanges:
+        if (allows(version)) return this;
+        newMin = this.min;
+        includeMin = this.includeMin;
+        if (max != null) {
+          // Only set max if it was set before.
+          newMax = version.nextBreaking.firstPreRelease;
+          includeMax = false;
+        }
+        break;
+    }
+
+    return VersionRange(
+      min: newMin,
+      includeMin: includeMin,
+      max: newMax,
+      includeMax: includeMax,
+    );
+  }
+
+  @override
   int compareTo(VersionRange other) {
     if (min == null) {
       if (other.min == null) return _compareMax(other);
@@ -470,6 +524,30 @@ class VersionRange implements Comparable<VersionRange>, VersionConstraint {
 class CompatibleWithVersionRange extends VersionRange {
   CompatibleWithVersionRange(Version version)
       : super._(version, version.nextBreaking.firstPreRelease, true, false);
+
+  @override
+  VersionConstraint updateWith(
+    Version version, {
+    UpdateStrategy strategy = UpdateStrategy.bumpVersions,
+  }) {
+    if (version < min!) {
+      throw ArgumentError(
+        'Version $version can\'t be lower than version constraint ${toString()}',
+      );
+    }
+    switch (strategy) {
+      case UpdateStrategy.bumpVersions:
+        return CompatibleWithVersionRange(version);
+      case UpdateStrategy.widenRanges:
+        if (allows(version)) return this;
+        return VersionRange(
+          min: min!,
+          max: version.nextBreaking.firstPreRelease,
+          includeMin: includeMin,
+          includeMax: false,
+        );
+    }
+  }
 
   @override
   String toString() => '^$min';

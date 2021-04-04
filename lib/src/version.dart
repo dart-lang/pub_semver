@@ -320,6 +320,11 @@ class Version implements VersionConstraint, VersionRange {
   }
 
   @override
+  VersionConstraint updateWith(Version version, {UpdateStrategy? strategy}) {
+    return version;
+  }
+
+  @override
   String toString() => _text;
 
   /// Compares a dot-separated component of two versions.

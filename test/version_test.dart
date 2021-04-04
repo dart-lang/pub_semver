@@ -374,6 +374,15 @@ void main() {
       expect(() => Version.primary([]), throwsStateError);
     });
   });
+
+  test('updateWith()', () {
+    var constraint = Version(0, 1, 2);
+
+    expect(
+      constraint.updateWith(Version(1, 2, 3)),
+      equals(Version(1, 2, 3)),
+    );
+  });
 }
 
 Version _primary(List<String> input) =>

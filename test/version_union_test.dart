@@ -480,4 +480,16 @@ void main() {
           ])));
     });
   });
+
+  test('updateWith()', () {
+    var constraint = VersionUnion.fromRanges([
+      Version(1, 2, 3),
+      Version(4, 5, 6),
+    ]);
+
+    expect(
+        () => constraint.updateWith(Version(7, 8, 9)),
+      throwsA(const TypeMatcher<UnsupportedError>()),
+    );
+  });
 }

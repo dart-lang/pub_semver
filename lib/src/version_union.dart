@@ -212,6 +212,14 @@ class VersionUnion implements VersionConstraint {
       VersionConstraint.unionOf([this, other]);
 
   @override
+  VersionConstraint updateWith(Version version, {UpdateStrategy? strategy}) {
+    throw UnsupportedError(
+      'updateWith is not supported for VersionUnion as no valid version '
+      'constraints can be created from union versions',
+    );
+  }
+
+  @override
   bool operator ==(Object other) =>
       other is VersionUnion &&
       const ListEquality().equals(ranges, other.ranges);
