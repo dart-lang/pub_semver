@@ -488,7 +488,7 @@ void main() {
     ]);
 
     expect(
-        () => constraint.updateWith(Version(7, 8, 9)),
+      () => constraint.updateWith(Version(7, 8, 9)),
       throwsA(const TypeMatcher<UnsupportedError>()),
     );
   });
