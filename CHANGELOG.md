@@ -1,8 +1,6 @@
 # 2.1.1-dev
 
 - Add markdown badges to the readme.
-- Switch to using `Object.hashAll` (from package:collection's
-  `ListEquality.hash`).
 - Increase the minimum SDK requirement to `2.14.0`.
 
 # 2.1.1
