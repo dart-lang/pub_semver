@@ -175,8 +175,8 @@ class Version implements VersionConstraint, VersionRange {
       major ^
       minor ^
       patch ^
-      _equality.hash(preRelease) ^
-      _equality.hash(build);
+      Object.hashAll(preRelease) ^
+      Object.hashAll(build);
 
   bool operator <(Version other) => compareTo(other) < 0;
   bool operator >(Version other) => compareTo(other) > 0;

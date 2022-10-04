@@ -217,7 +217,7 @@ class VersionUnion implements VersionConstraint {
       const ListEquality<VersionRange>().equals(ranges, other.ranges);
 
   @override
-  int get hashCode => const ListEquality<VersionRange>().hash(ranges);
+  int get hashCode => Object.hashAll(ranges);
 
   @override
   String toString() => ranges.join(' or ');
