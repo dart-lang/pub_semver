@@ -172,9 +172,7 @@ class Version implements VersionConstraint, VersionRange {
 
   @override
   int get hashCode =>
-      major ^
-      minor ^
-      patch ^
+      Object.hash(major, minor, patch) ^
       Object.hashAll(preRelease) ^
       Object.hashAll(build);
 
