@@ -93,7 +93,7 @@ abstract class VersionConstraint {
         case '>':
           return VersionRange(min: version, includeMin: false);
       }
-      throw UnsupportedError(op);
+      throw UnsupportedError(op!);
     }
 
     // Try to parse the "^" operator followed by a version.
