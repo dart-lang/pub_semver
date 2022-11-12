@@ -2,7 +2,6 @@
 
 - Add type parameters to the signatures of the `Version.preRelease` and
   `Version.build` fields (`List` ==> `List<Object>`).
-- Add additional lints to the set used to analyze this project; 
   [#74](https://github.com/dart-lang/pub_semver/pull/74).
 - Require Dart 2.17.
 
