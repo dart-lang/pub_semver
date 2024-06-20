@@ -9,7 +9,7 @@ topics:
  - semver
 
 environment:
-  sdk: ^3.3.0
+  sdk: ^3.4.0
 
 dependencies:
   collection: ^1.15.0
