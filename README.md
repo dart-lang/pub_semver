@@ -1,3 +1,6 @@
+> [!IMPORTANT]  
+> This repo has moved to https://github.com/dart-lang/tools/tree/main/pkgs/pub_semver
+
 [![Dart CI](https://github.com/dart-lang/pub_semver/actions/workflows/test-package.yml/badge.svg)](https://github.com/dart-lang/pub_semver/actions/workflows/test-package.yml)
 [![Pub](https://img.shields.io/pub/v/pub_semver.svg)](https://pub.dev/packages/pub_semver)
 [![package publisher](https://img.shields.io/pub/publisher/pub_semver.svg)](https://pub.dev/packages/pub_semver/publisher)
